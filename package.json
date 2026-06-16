@@ -1,0 +1,14 @@
+{
+  "name": "astra-x-events-portal",
+  "version": "1.0.0",
+  "description": "Marvel-themed events page for Astra-X college flagship festival",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}
