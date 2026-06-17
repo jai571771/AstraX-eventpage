@@ -16,8 +16,8 @@
     --marvel-gold-glow: rgba(245, 196, 0, 0.5);
     
     /* Cosmic / Portal Glow Colors */
-    --portal-orange: #ff6a00;
-    --portal-orange-glow: rgba(255, 106, 0, 0.5);
+    --portal-orange: #00ff88;
+    --portal-orange-glow: rgba(0, 255, 136, 0.5);
     --portal-cyan: #00d9ff;
     --portal-cyan-glow: rgba(0, 217, 255, 0.5);
     --portal-purple: #9d00ff;
@@ -93,6 +93,26 @@ a {
     background-repeat: no-repeat;
 }
 
+.bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.cosmic-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(7, 8, 14, 0.42); /* Reduced opacity for more background video visibility */
+    z-index: 1;
+}
+
 .nebula-red, .nebula-blue {
     position: absolute;
     border-radius: 50%;
@@ -100,6 +120,7 @@ a {
     opacity: 0.15;
     mix-blend-mode: screen;
     animation: orbit 40s linear infinite;
+    z-index: 2;
 }
 
 .nebula-red {
@@ -309,10 +330,10 @@ a {
 }
 
 .title-glow {
-    background: linear-gradient(135deg, var(--marvel-red) 30%, var(--marvel-gold) 100%);
+    background: linear-gradient(135deg, #00ff88 30%, #00b359 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0px 0px 20px rgba(240, 19, 30, 0.4));
+    filter: drop-shadow(0px 0px 20px rgba(0, 255, 136, 0.45));
     font-size: 6.5rem;
     letter-spacing: 1px;
 }
@@ -335,7 +356,7 @@ a {
 .hero-divider .line {
     height: 1px;
     width: 120px;
-    background: linear-gradient(90deg, transparent, var(--marvel-red), transparent);
+    background: linear-gradient(90deg, transparent, #00ff88, transparent);
 }
 
 .reactor-core {
@@ -1594,3 +1615,5 @@ section {
         padding: 1.5rem;
     }
 }
+
+

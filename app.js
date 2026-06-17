@@ -266,89 +266,123 @@ function initPortalSlider() {
    5. DETAIL DOSSIER MODAL & DATABASE
    ========================================================================== */
 const eventDatabase = {
-    "2025": {
-        year: "2025",
-        title: "Astra-X 2025",
-        subtitle: "Multiverse of Innovation",
-        image: "assets/event-2025.png",
+    "debate": {
+        year: "Debate",
+        title: "AI Technical Debate",
+        subtitle: "Brain vs Algorithm",
+        image: "assets/event-debate.png",
         stats: {
-            participants: "600+",
-            projects: "120+",
-            prizePool: "₹2,00,000"
+            participants: "200+",
+            projects: "40+ Debaters",
+            prizePool: "₹40,000"
         },
-        description: "Our latest flagship national-level tech expo & hackathon. Teams from all over the country assembled to construct tech prototypes addressing real-world crises in health, climate, and security. We witnessed a convergence of ideas across multiple technological dimensions, mentored by tech leaders from top-tier firms.",
+        description: "An intense battle of minds pitching human logic against artificial intelligence algorithms. Competitors debated hot-button issues in machine learning, neural ethics, and futuristic engineering, judged by industry leading panels.",
         highlights: [
-            "Special guest lecture on Quantum Computing and Machine Learning futures.",
-            "24-Hour Non-stop hacking Arena evaluated by automated testing grids.",
-            "Live project demonstrations showcasing innovative IoT and robotic architectures."
+            "Deep discussions on artificial consciousness.",
+            "Judged by expert AI scientists and ethicists.",
+            "Automated AI chatbot acting as a third rebuttal element."
         ]
     },
-    "2024": {
-        year: "2024",
-        title: "Astra-X 2024",
-        subtitle: "Age of Robotics",
-        image: "assets/event-2024.png",
-        stats: {
-            participants: "450+",
-            projects: "80+ Robots",
-            prizePool: "₹1,50,000"
-        },
-        description: "A mechanical battlefield where metal met metal. Featuring intense heavyweight Robowars, obstacles, and drone racing. Astra-X 2024 was entirely dedicated to mechanical innovation and automation, pushing participants' fabrication and pilot capabilities to their absolute limits.",
-        highlights: [
-            "Heavyweight Robowar (30kg category) held in a reinforced bulletproof steel cage.",
-            "Obstacle-course drone racing using FPV video goggles for immersive piloting.",
-            "Smart autonomous maze solvers utilizing micro-sensors and real-time algorithms."
-        ]
-    },
-    "2023": {
-        year: "2023",
-        title: "Astra-X 2023",
-        subtitle: "Infinity Coding",
-        image: "assets/event-2023.png",
+    "tva": {
+        year: "Quest",
+        title: "TVA: Variant Hunt",
+        subtitle: "Multiverse Treasure Hunt",
+        image: "assets/event-tva.png",
         stats: {
             participants: "500+",
-            projects: "3000+ Codes",
-            prizePool: "₹1,00,000"
+            projects: "15+ Timelines",
+            prizePool: "₹60,000"
         },
-        description: "A battle of algorithms, competitive coding, and cybersecurity hackathons. Coders completed challenges to lock down the infinity stones of logic. Speed programmers raced against the clock while security enthusiasts solved complex cryptographic puzzles in our custom Capture The Flag (CTF) cyber grid.",
+        description: "A high-speed multiverse treasure hunt across complex temporal nodes. Participants decrypted code strings, resolved temporal anomalies, and located timeline variants to save the cosmic grid from collapsing.",
         highlights: [
-            "12-hour CTF arena with custom-coded cyber security exploits.",
-            "Speed-coding tournaments structured as single-elimination brackets.",
-            "Expert panel discussions addressing global developments in Cyber Defense."
+            "Cryptic puzzle clues scattered across interactive game rooms.",
+            "Custom simulated database terminals mimicking time-travel logs.",
+            "Live leaderboard tracking chronological variant disruptions."
         ]
     },
-    "2022": {
-        year: "2022",
-        title: "Astra-X 2022",
-        subtitle: "Cosmic Canvas",
-        image: "assets/event-2022.png",
+    "technova": {
+        year: "Tech",
+        title: "Technova",
+        subtitle: "Innovation Challenge",
+        image: "assets/event-technova.png",
         stats: {
             participants: "350+",
-            projects: "70+ Games",
+            projects: "80+ Ideas",
             prizePool: "₹80,000"
         },
-        description: "Where technology met artistry. Cosmic Canvas 2022 provided the ultimate playground for UI/UX designers, artists, and game developers. Participants built responsive layouts for futuristic star-maps or created short playable indie games under intense time limits.",
+        description: "A design and prototyping challenge aimed at bringing innovative tech solutions to life. Students collaborated under pressure to build hardware and software projects solving local environmental and logistics issues.",
         highlights: [
-            "Futuristic spaceship UI/UX dashboard design sprint.",
-            "48-hour Game Jam with live public playtesting of student prototypes.",
-            "Digital concept-art and character modeling masterclass led by studio veterans."
+            "Stark-like innovation hubs with hardware/IoT testing tools.",
+            "Pitching sessions to venture capitalists and startup incubator managers.",
+            "Sustainable eco-tech ideas taking top positions."
         ]
     },
-    "2021": {
-        year: "2021",
-        title: "Astra-X 2021",
-        subtitle: "Quantum Quest",
-        image: "assets/event-2021.png",
+    "neural": {
+        year: "Tech",
+        title: "Neural Knockout",
+        subtitle: "Algonquin Combat Arena",
+        image: "assets/event-neural.png",
         stats: {
-            participants: "800+",
-            projects: "15+ Stages",
-            prizePool: "₹70,000"
+            participants: "300+",
+            projects: "120+ Submissions",
+            prizePool: "₹50,000"
         },
-        description: "The inaugural virtual event that started the legacy. Quantum Quest was a massive cryptographic treasure hunt and science trivia arena designed to bridge students during lockdowns. Teams worked across shared screens to decode coordinates and hack digital locks.",
+        description: "A deep learning battle arena where custom neural network models competed in a virtual knockout tournament. Competitors trained reinforcement learning bots to outmaneuver opponents in simulated strategy environments.",
         highlights: [
-            "Multistage encrypted digital treasure hunt with highly-challenging puzzles.",
-            "Integrated live leaderboard monitoring real-time puzzle progression.",
-            "Grand finale broadcasted to over 1000 viewers checking the final chase."
+            "Live model clashes streamed on virtual arena interfaces.",
+            "Intense competitive optimization challenges.",
+            "Special reward for the most memory-efficient network."
+        ]
+    },
+    "pixel": {
+        year: "Design",
+        title: "Pixel Whisper",
+        subtitle: "Design by Voice",
+        image: "assets/event-pixel.png",
+        stats: {
+            participants: "250+",
+            projects: "90+ Canvas Art",
+            prizePool: "₹45,000"
+        },
+        description: "Where design parameters were generated purely by vocal commands. Competitors used advanced voice-to-vector interfaces to design logos, websites, and layouts within strict timed sprints.",
+        highlights: [
+            "Unique voice-controlled interface design mechanics.",
+            "Ken Burns visual galleries displaying completed vector artwork.",
+            "Judged on voice command efficiency and visual clarity."
+        ]
+    },
+    "nexus": {
+        year: "Quest",
+        title: "Nexus Grid",
+        subtitle: "Tech Bingo Challenge",
+        image: "assets/event-nexus.png",
+        stats: {
+            participants: "400+",
+            projects: "200+ Grids",
+            prizePool: "₹35,000"
+        },
+        description: "A high-speed cyber bingo event that tested algorithmic speed and basic tech trivia. Players hacked grid nodes and solved quick-fire coding challenges to unlock coordinates and line up their boards.",
+        highlights: [
+            "Real-time multiplayer web sockets grid board.",
+            "Speed coding and logic riddle triggers.",
+            "Climactic final leaderboard chase between top cyber players."
+        ]
+    },
+    "ideathon": {
+        year: "Flagship",
+        title: "Ideathon",
+        subtitle: "Flagship Challenge",
+        image: "assets/event-ideathon.png",
+        stats: {
+            participants: "600+",
+            projects: "150+ Solutions",
+            prizePool: "₹1,00,000"
+        },
+        description: "The crowning flagship event of Astra-X. Teams pitched revolutionary product concepts to address industrial safety, clean energy, and quantum computing. A showcase of future-tech ideas that can redefine the industry.",
+        highlights: [
+            "Intense 36-hour design, research, and pitch sprint.",
+            "Mentorship from top tech entrepreneurs.",
+            "Incubation opportunities for winning project teams."
         ]
     }
 };
