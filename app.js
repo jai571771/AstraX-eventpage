@@ -3,12 +3,11 @@
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-    initParticles();
+    // initParticles();
     initNavbar();
-    initPortalSlider();
-    initModal();
     initTimeline();
     initStatsCounter();
+    initMirrorSlider();
 });
 
 /* ==========================================================================
@@ -19,15 +18,15 @@ function initParticles() {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    let particlesArray = [];
-    let mouse = { x: null, y: null, radius: 120 };
+    let timelineThreads = [];
+    let mouse = { x: null, y: null, radius: 150 };
 
     // Set canvas dimensions
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        initThreads();
     }
-    resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
     // Track Mouse for interaction
@@ -41,86 +40,119 @@ function initParticles() {
         mouse.y = null;
     });
 
-    // Particle template
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 0.5;
-            this.speedX = (Math.random() - 0.5) * 0.4;
-            this.speedY = -Math.random() * 0.6 - 0.1; // slow upward drift
-            this.color = this.getRandomColor();
-            this.alpha = Math.random() * 0.6 + 0.2;
-        }
-
-        getRandomColor() {
-            // Marvel themed colors: Red, Gold, Orange, Cyan
-            const colors = [
-                'rgba(240, 19, 30, ', // Red
-                'rgba(245, 196, 0, ', // Gold
-                'rgba(255, 106, 0, ', // Orange
-                'rgba(0, 217, 255, ',  // Cyan
-            ];
-            return colors[Math.floor(Math.random() * colors.length)];
+    // Timeline Thread template
+    class TimelineThread {
+        constructor(baseX) {
+            this.baseX = baseX;
+            this.amplitude = Math.random() * 25 + 15;
+            this.wavelength = Math.random() * 150 + 120;
+            this.phase = Math.random() * 100;
+            this.speed = (Math.random() * 0.01 + 0.003) * (Math.random() < 0.5 ? 1 : -1);
+            this.color = Math.random() < 0.35 ? 'rgba(230, 184, 0, ' : 'rgba(0, 255, 136, '; // Gold or Green threads
+            this.alpha = Math.random() * 0.15 + 0.08;
+            this.thickness = Math.random() * 1.5 + 0.6;
+            
+            // Add nodes along this thread
+            this.nodes = [];
+            const numNodes = Math.floor(canvas.height / 220);
+            for (let i = 0; i < numNodes; i++) {
+                this.nodes.push({
+                    yOffsetPercent: (i + Math.random()) / numNodes, // position along height
+                    size: Math.random() * 3.5 + 1.5,
+                    pulseSpeed: Math.random() * 0.03 + 0.01,
+                    pulsePhase: Math.random() * Math.PI
+                });
+            }
         }
 
         update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            // Loop bottom to top
-            if (this.y < 0) {
-                this.y = canvas.height;
-                this.x = Math.random() * canvas.width;
-            }
-            if (this.x < 0 || this.x > canvas.width) {
-                this.speedX = -this.speedX;
-            }
-
-            // Mouse Push / Magnet Interaction
-            if (mouse.x != null && mouse.y != null) {
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius) {
-                    let forceDirectionX = dx / distance;
-                    let forceDirectionY = dy / distance;
-                    let force = (mouse.radius - distance) / mouse.radius;
-                    // Move away from mouse
-                    this.x -= forceDirectionX * force * 1.5;
-                    this.y -= forceDirectionY * force * 1.5;
-                }
-            }
+            this.phase += this.speed;
         }
 
         draw() {
+            // Draw the thread wave
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.color + this.alpha + ')';
-            ctx.fill();
+            ctx.lineWidth = this.thickness;
+            
+            let isFirst = true;
+            for (let y = 0; y <= canvas.height; y += 15) {
+                // Calculate wave position
+                let waveX = this.baseX + Math.sin(y / this.wavelength + this.phase) * this.amplitude;
+                
+                // Mouse interaction - warp the thread slightly towards cursor
+                if (mouse.x !== null && mouse.y !== null) {
+                    let dx = mouse.x - waveX;
+                    let dy = mouse.y - y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        let force = (mouse.radius - distance) / mouse.radius;
+                        waveX += dx * force * 0.35;
+                    }
+                }
+
+                if (isFirst) {
+                    ctx.moveTo(waveX, y);
+                    isFirst = false;
+                } else {
+                    ctx.lineTo(waveX, y);
+                }
+            }
+            
+            ctx.strokeStyle = this.color + this.alpha + ')';
+            ctx.stroke();
+
+            // Draw the nodes along this thread
+            this.nodes.forEach(node => {
+                let nodeY = node.yOffsetPercent * canvas.height;
+                let nodeX = this.baseX + Math.sin(nodeY / this.wavelength + this.phase) * this.amplitude;
+                
+                // Apply mouse warp to node position
+                if (mouse.x !== null && mouse.y !== null) {
+                    let dx = mouse.x - nodeX;
+                    let dy = mouse.y - nodeY;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        let force = (mouse.radius - distance) / mouse.radius;
+                        nodeX += dx * force * 0.35;
+                    }
+                }
+
+                node.pulsePhase += node.pulseSpeed;
+                let currentSize = node.size + Math.sin(node.pulsePhase) * 1.5;
+                
+                ctx.beginPath();
+                ctx.arc(nodeX, nodeY, currentSize, 0, Math.PI * 2);
+                ctx.fillStyle = this.color + (this.alpha + 0.3) + ')';
+                ctx.shadowColor = this.color.includes('230') ? 'rgba(230, 184, 0, 0.8)' : 'rgba(0, 255, 136, 0.8)';
+                ctx.shadowBlur = 8;
+                ctx.fill();
+                ctx.shadowBlur = 0; // reset shadow
+            });
         }
     }
 
-    // Populate particles
-    function init() {
-        particlesArray = [];
-        const numberOfParticles = Math.floor((canvas.width * canvas.height) / 12000);
-        for (let i = 0; i < numberOfParticles; i++) {
-            particlesArray.push(new Particle());
+    // Populate threads
+    function initThreads() {
+        timelineThreads = [];
+        const gap = 160;
+        const totalThreads = Math.ceil(canvas.width / gap) + 1;
+        for (let i = 0; i < totalThreads; i++) {
+            let baseX = (i - 0.5) * gap;
+            timelineThreads.push(new TimelineThread(baseX));
         }
     }
-    init();
-    window.addEventListener('resize', init);
 
     // Loop
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < particlesArray.length; i++) {
-            particlesArray[i].update();
-            particlesArray[i].draw();
+        for (let i = 0; i < timelineThreads.length; i++) {
+            timelineThreads[i].update();
+            timelineThreads[i].draw();
         }
         requestAnimationFrame(animate);
     }
+    
+    resizeCanvas();
     animate();
 }
 
@@ -162,325 +194,6 @@ function initNavbar() {
 }
 
 /* ==========================================================================
-   3. MYSTICAL PORTAL SLIDER LOGIC
-   ========================================================================== */
-function initPortalSlider() {
-    const cards = document.querySelectorAll('.portal-card');
-    const prevBtn = document.querySelector('.portal-nav-btn.prev');
-    const nextBtn = document.querySelector('.portal-nav-btn.next');
-    
-    if (cards.length === 0) return;
-
-    let activeIndex = 0;
-    const totalCards = cards.length;
-
-    function updateSlider() {
-        cards.forEach((card, index) => {
-            card.classList.remove('active', 'next', 'prev', 'hidden');
-
-            if (index === activeIndex) {
-                card.classList.add('active');
-            } else if (index === (activeIndex + 1) % totalCards) {
-                card.classList.add('next');
-            } else if (index === (activeIndex - 1 + totalCards) % totalCards) {
-                card.classList.add('prev');
-            } else {
-                card.classList.add('hidden');
-            }
-        });
-    }
-
-    // Initialize state
-    updateSlider();
-
-    // Event listeners
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            activeIndex = (activeIndex + 1) % totalCards;
-            updateSlider();
-        });
-    }
-
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            activeIndex = (activeIndex - 1 + totalCards) % totalCards;
-            updateSlider();
-        });
-    }
-
-    // Direct card clicking (clicking next or prev shifts the slider)
-    cards.forEach((card, index) => {
-        card.addEventListener('click', (e) => {
-            if (card.classList.contains('next')) {
-                activeIndex = index;
-                updateSlider();
-                e.stopPropagation(); // prevent triggering modal explore
-            } else if (card.classList.contains('prev')) {
-                activeIndex = index;
-                updateSlider();
-                e.stopPropagation();
-            }
-        });
-        
-        // Add 3D Tilt interaction on active portal card
-        card.addEventListener('mousemove', (e) => {
-            if (!card.classList.contains('active')) return;
-            
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = ((centerY - y) / centerY) * 15;
-            const rotateY = ((x - centerX) / centerX) * 15;
-            
-            const img = card.querySelector('.portal-image-holder');
-            if (img) {
-                img.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
-            }
-        });
-
-        card.addEventListener('mouseleave', () => {
-            const img = card.querySelector('.portal-image-holder');
-            if (img) {
-                img.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
-            }
-        });
-    });
-
-    // Keyboard support
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') {
-            activeIndex = (activeIndex + 1) % totalCards;
-            updateSlider();
-        } else if (e.key === 'ArrowLeft') {
-            activeIndex = (activeIndex - 1 + totalCards) % totalCards;
-            updateSlider();
-        }
-    });
-}
-
-/* ==========================================================================
-   5. DETAIL DOSSIER MODAL & DATABASE
-   ========================================================================== */
-const eventDatabase = {
-    "debate": {
-        year: "Debate",
-        title: "AI Technical Debate",
-        subtitle: "Brain vs Algorithm",
-        image: "assets/event-debate.png",
-        stats: {
-            participants: "200+",
-            projects: "40+ Debaters",
-            prizePool: "₹40,000"
-        },
-        description: "An intense battle of minds pitching human logic against artificial intelligence algorithms. Competitors debated hot-button issues in machine learning, neural ethics, and futuristic engineering, judged by industry leading panels.",
-        highlights: [
-            "Deep discussions on artificial consciousness.",
-            "Judged by expert AI scientists and ethicists.",
-            "Automated AI chatbot acting as a third rebuttal element."
-        ]
-    },
-    "tva": {
-        year: "Quest",
-        title: "TVA: Variant Hunt",
-        subtitle: "Multiverse Treasure Hunt",
-        image: "assets/event-tva.png",
-        stats: {
-            participants: "500+",
-            projects: "15+ Timelines",
-            prizePool: "₹60,000"
-        },
-        description: "A high-speed multiverse treasure hunt across complex temporal nodes. Participants decrypted code strings, resolved temporal anomalies, and located timeline variants to save the cosmic grid from collapsing.",
-        highlights: [
-            "Cryptic puzzle clues scattered across interactive game rooms.",
-            "Custom simulated database terminals mimicking time-travel logs.",
-            "Live leaderboard tracking chronological variant disruptions."
-        ]
-    },
-    "technova": {
-        year: "Tech",
-        title: "Technova",
-        subtitle: "Innovation Challenge",
-        image: "assets/event-technova.png",
-        stats: {
-            participants: "350+",
-            projects: "80+ Ideas",
-            prizePool: "₹80,000"
-        },
-        description: "A design and prototyping challenge aimed at bringing innovative tech solutions to life. Students collaborated under pressure to build hardware and software projects solving local environmental and logistics issues.",
-        highlights: [
-            "Stark-like innovation hubs with hardware/IoT testing tools.",
-            "Pitching sessions to venture capitalists and startup incubator managers.",
-            "Sustainable eco-tech ideas taking top positions."
-        ]
-    },
-    "neural": {
-        year: "Tech",
-        title: "Neural Knockout",
-        subtitle: "Algonquin Combat Arena",
-        image: "assets/event-neural.png",
-        stats: {
-            participants: "300+",
-            projects: "120+ Submissions",
-            prizePool: "₹50,000"
-        },
-        description: "A deep learning battle arena where custom neural network models competed in a virtual knockout tournament. Competitors trained reinforcement learning bots to outmaneuver opponents in simulated strategy environments.",
-        highlights: [
-            "Live model clashes streamed on virtual arena interfaces.",
-            "Intense competitive optimization challenges.",
-            "Special reward for the most memory-efficient network."
-        ]
-    },
-    "pixel": {
-        year: "Design",
-        title: "Pixel Whisper",
-        subtitle: "Design by Voice",
-        image: "assets/event-pixel.png",
-        stats: {
-            participants: "250+",
-            projects: "90+ Canvas Art",
-            prizePool: "₹45,000"
-        },
-        description: "Where design parameters were generated purely by vocal commands. Competitors used advanced voice-to-vector interfaces to design logos, websites, and layouts within strict timed sprints.",
-        highlights: [
-            "Unique voice-controlled interface design mechanics.",
-            "Ken Burns visual galleries displaying completed vector artwork.",
-            "Judged on voice command efficiency and visual clarity."
-        ]
-    },
-    "nexus": {
-        year: "Quest",
-        title: "Nexus Grid",
-        subtitle: "Tech Bingo Challenge",
-        image: "assets/event-nexus.png",
-        stats: {
-            participants: "400+",
-            projects: "200+ Grids",
-            prizePool: "₹35,000"
-        },
-        description: "A high-speed cyber bingo event that tested algorithmic speed and basic tech trivia. Players hacked grid nodes and solved quick-fire coding challenges to unlock coordinates and line up their boards.",
-        highlights: [
-            "Real-time multiplayer web sockets grid board.",
-            "Speed coding and logic riddle triggers.",
-            "Climactic final leaderboard chase between top cyber players."
-        ]
-    },
-    "ideathon": {
-        year: "Flagship",
-        title: "Ideathon",
-        subtitle: "Flagship Challenge",
-        image: "assets/event-ideathon.png",
-        stats: {
-            participants: "600+",
-            projects: "150+ Solutions",
-            prizePool: "₹1,00,000"
-        },
-        description: "The crowning flagship event of Astra-X. Teams pitched revolutionary product concepts to address industrial safety, clean energy, and quantum computing. A showcase of future-tech ideas that can redefine the industry.",
-        highlights: [
-            "Intense 36-hour design, research, and pitch sprint.",
-            "Mentorship from top tech entrepreneurs.",
-            "Incubation opportunities for winning project teams."
-        ]
-    }
-};
-
-function initModal() {
-    const modal = document.getElementById('event-modal');
-    const closeBtn = document.querySelector('.modal-close');
-    const exploreTrigger = document.getElementById('portal-explore-trigger');
-    const portalCards = document.querySelectorAll('.portal-card');
-
-    const mImage = document.getElementById('modal-image');
-    const mYear = document.getElementById('modal-year');
-    const mTitle = document.getElementById('modal-title');
-    const mSubtitle = document.getElementById('modal-subtitle');
-    const mStats = document.getElementById('modal-stats');
-    const mDesc = document.getElementById('modal-description');
-    const mHighlights = document.getElementById('modal-highlights');
-
-    function openModal(yearId) {
-        const data = eventDatabase[yearId];
-        if (!data) return;
-
-        // Set text & attributes
-        mImage.src = data.image;
-        mImage.alt = `${data.title} - ${data.subtitle} Poster`;
-        mYear.textContent = data.year;
-        mTitle.textContent = data.title;
-        mSubtitle.textContent = data.subtitle;
-        mDesc.textContent = data.description;
-
-        // Build stats markup
-        mStats.innerHTML = `
-            <div class="modal-stat-item">HEROES: <strong>${data.stats.participants}</strong></div>
-            <div class="modal-stat-item">DEPLOYED: <strong>${data.stats.projects}</strong></div>
-            <div class="modal-stat-item">REWARD: <strong>${data.stats.prizePool}</strong></div>
-        `;
-
-        // Build highlights list
-        mHighlights.innerHTML = '';
-        data.highlights.forEach(highlight => {
-            const li = document.createElement('li');
-            li.textContent = highlight;
-            mHighlights.appendChild(li);
-        });
-
-        // Trigger classes
-        modal.classList.add('open');
-        modal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden'; // Lock scrolling
-    }
-
-    function closeModal() {
-        modal.classList.remove('open');
-        modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = ''; // Release scrolling
-    }
-
-    // Attach click events to active portal card
-    portalCards.forEach(card => {
-        card.addEventListener('click', () => {
-            if (card.classList.contains('active')) {
-                const yearId = card.getAttribute('data-id');
-                openModal(yearId);
-            }
-        });
-    });
-
-    // Attach click events to bottom action button
-    if (exploreTrigger) {
-        exploreTrigger.addEventListener('click', () => {
-            const activeCard = document.querySelector('.portal-card.active');
-            if (activeCard) {
-                const yearId = activeCard.getAttribute('data-id');
-                openModal(yearId);
-            }
-        });
-    }
-
-    // Close triggers
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeModal);
-    }
-
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    // ESC Key to close modal
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('open')) {
-            closeModal();
-        }
-    });
-}
-
-/* ==========================================================================
    6. TIMELINE SCROLL TRIGGERED PROGRESS & HIGHLIGHTS
    ========================================================================== */
 function initTimeline() {
@@ -506,7 +219,7 @@ function initTimeline() {
     nodes.forEach(node => nodeObserver.observe(node));
 
     // Scroll calculations for central timeline laser glow height
-    window.addEventListener('scroll', () => {
+    const handleScroll = () => {
         const rect = container.getBoundingClientRect();
         const triggerPoint = window.innerHeight * 0.6; // trigger viewport line
 
@@ -520,6 +233,7 @@ function initTimeline() {
                 const nodeRect = node.getBoundingClientRect();
                 if (nodeRect.top < triggerPoint) {
                     node.classList.add('active-marker');
+                    node.classList.add('visible');
                 } else {
                     node.classList.remove('active-marker');
                 }
@@ -528,7 +242,10 @@ function initTimeline() {
             progressLine.style.height = '0%';
             nodes.forEach(node => node.classList.remove('active-marker'));
         }
-    });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
 }
 
 /* ==========================================================================
@@ -580,4 +297,454 @@ function initStatsCounter() {
     }, { threshold: 0.3 });
 
     observer.observe(statsContainer);
+}
+
+/* ==========================================================================
+   8. DOCTOR STRANGE MIRROR DIMENSION SHOWCASE SLIDER
+   ========================================================================== */
+function initMirrorSlider() {
+    const eventDatabase = [
+        {
+            id: "debate",
+            badge: "Tech Saga",
+            title: "AI Technical Debate",
+            image: "assets/event-debate.png",
+            prize: "₹40,000",
+            participants: "200+",
+            description: "An intense battle of minds pitching human logic against artificial intelligence algorithms. Competitors will debate hot-button issues in machine learning, neural ethics, and futuristic engineering."
+        },
+        {
+            id: "tva",
+            badge: "Quest Saga",
+            title: "TVA: Variant Hunt",
+            image: "assets/event-tva.png",
+            prize: "₹60,000",
+            participants: "500+",
+            description: "A high-speed multiverse treasure hunt across complex temporal nodes. Decrypt code strings, resolve temporal anomalies, and locate timeline variants to save the cosmic grid."
+        },
+        {
+            id: "technova",
+            badge: "Innovation Challenge",
+            title: "Technova",
+            image: "assets/event-technova.png",
+            prize: "₹80,000",
+            participants: "350+",
+            description: "A design and prototyping challenge aimed at bringing innovative tech solutions to life. Collaborate under pressure to build hardware and software projects solving local environmental issues."
+        },
+        {
+            id: "neural",
+            badge: "Tech Saga",
+            title: "Neural Knockout",
+            image: "assets/event-neural.png",
+            prize: "₹50,000",
+            participants: "300+",
+            description: "A deep learning battle arena where custom neural network models will compete in a virtual knockout tournament. Train reinforcement learning bots to outmaneuver opponents."
+        },
+        {
+            id: "pixel",
+            badge: "Design Saga",
+            title: "Pixel Whisper",
+            image: "assets/event-pixel.png",
+            prize: "₹45,000",
+            participants: "250+",
+            description: "Where design parameters are generated purely by vocal commands. Use advanced voice-to-vector interfaces to design logos, websites, and layouts within strict timed sprints."
+        },
+        {
+            id: "nexus",
+            badge: "Quest Saga",
+            title: "Nexus Grid",
+            image: "assets/event-nexus.png",
+            prize: "₹35,000",
+            participants: "400+",
+            description: "A high-speed cyber bingo event designed to test algorithmic speed and basic tech trivia. Hack grid nodes and solve quick-fire coding challenges to unlock coordinates."
+        },
+        {
+            id: "ideathon",
+            badge: "Flagship Saga",
+            title: "Ideathon",
+            image: "assets/event-ideathon.png",
+            prize: "₹1,00,000",
+            participants: "600+",
+            description: "The crowning flagship event of Astra-X. Pitch revolutionary product concepts addressing industrial safety, clean energy, and quantum computing to a panel of expert judges."
+        }
+    ];
+
+    let currentIdx = 0;
+    let isAnimating = false;
+    let isDetailsOpen = false; // Track if the event details card is currently shown
+
+    // DOM Elements
+    const frame = document.querySelector('.mirror-frame');
+    if (!frame) return;
+
+    const activeImg = document.getElementById('mirror-active-image');
+    const activeImgContainer = document.querySelector('.mirror-active-image-container');
+    const slicesContainer = document.querySelector('.mirror-slices-container');
+    const ghostsContainer = document.querySelector('.mirror-ghosts-container');
+    const voidGrid = document.querySelector('.mirror-void');
+    const prevBtn = document.querySelector('.mirror-nav-btn.prev');
+    const nextBtn = document.querySelector('.mirror-nav-btn.next');
+    const energyBorder = document.querySelector('.frame-energy-border');
+    const ambientGlow = document.querySelector('.frame-ambient-glow');
+    
+    // Details Card Elements
+    const detailBadge = document.getElementById('details-badge');
+    const detailTitle = document.getElementById('details-title');
+    const detailDesc = document.getElementById('details-description');
+    const detailPrize = document.getElementById('details-prize');
+    const detailParticipants = document.getElementById('details-participants');
+    const detailsCard = document.querySelector('.mirror-details-card');
+
+    // Hide details card by default
+    if (detailsCard) {
+        gsap.set(detailsCard, {
+            opacity: 0,
+            y: 15,
+            pointerEvents: 'none',
+            visibility: 'hidden'
+        });
+    }
+
+    // SVG cracks
+    const crackPaths = document.querySelectorAll('.crack-path');
+
+    // --- Particle Engine (Canvas) ---
+    const canvas = document.getElementById('mirror-particle-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    let particles = [];
+    const particleCount = 50;
+    let speedMultiplier = 1;
+
+    function resizeCanvas() {
+        if (!canvas.parentElement) return;
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+        constructor() {
+            this.reset();
+        }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.6;
+            this.speedX = (Math.random() - 0.5) * 0.3;
+            this.speedY = -Math.random() * 0.7 - 0.1;
+            this.opacity = Math.random() * 0.5 + 0.25;
+            this.color = Math.random() < 0.4 ? 'rgba(0, 255, 136, ' : 'rgba(0, 204, 102, ';
+        }
+        update() {
+            this.x += this.speedX * speedMultiplier;
+            this.y += this.speedY * speedMultiplier;
+            if (this.y < 0 || this.x < 0 || this.x > canvas.width) {
+                this.reset();
+                this.y = canvas.height;
+            }
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color + this.opacity + ')';
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // Helper: Split Image into 8 Vertical 3D Panels
+    function createSlices(imageSrc, container, numSlices = 8) {
+        container.innerHTML = '';
+        const slices = [];
+        for (let i = 0; i < numSlices; i++) {
+            const slice = document.createElement('div');
+            slice.className = 'mirror-slice';
+            slice.style.left = `${(i / numSlices) * 100}%`;
+            slice.style.width = `${100 / numSlices}%`;
+            slice.style.backgroundImage = `url(${imageSrc})`;
+            slice.style.backgroundSize = `${numSlices * 100}% 100%`;
+            slice.style.backgroundPosition = `${(i / (numSlices - 1)) * 100}% 0%`;
+            container.appendChild(slice);
+            slices.push(slice);
+        }
+        return slices;
+    }
+
+    // Nav Trigger
+    async function triggerMirrorTransition(nextIndex) {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        const currentData = eventDatabase[currentIdx];
+        const nextData = eventDatabase[nextIndex];
+
+        // Step 0: Fade details card out if open
+        if (isDetailsOpen) {
+            gsap.to(detailsCard, {
+                opacity: 0,
+                y: 15,
+                duration: 0.35,
+                ease: "power2.out"
+            });
+        }
+
+        const timeline = gsap.timeline({
+            onComplete: () => {
+                currentIdx = nextIndex;
+                isAnimating = false;
+                
+                // Show stable static next image
+                activeImg.src = nextData.image;
+                activeImg.alt = nextData.title;
+                activeImgContainer.classList.add('active');
+                
+                // Clear slices & restore ambient glows
+                slicesContainer.innerHTML = '';
+                ghostsContainer.innerHTML = '';
+                voidGrid.classList.remove('active');
+                
+                gsap.to(energyBorder, { opacity: 0, duration: 0.5 });
+                gsap.to(ambientGlow, { opacity: 0.15, duration: 0.8 });
+                
+                // Set details card content & fade in
+                detailBadge.textContent = nextData.badge;
+                detailTitle.textContent = nextData.title;
+                detailDesc.textContent = nextData.description;
+                detailPrize.textContent = nextData.prize;
+                detailParticipants.textContent = nextData.participants;
+                
+                if (isDetailsOpen) {
+                    gsap.to(detailsCard, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.55,
+                        ease: "power3.out"
+                    });
+                }
+            }
+        });
+
+        // Time 0: Phase 1 starts (Reality Awakens)
+        timeline.call(() => {
+            speedMultiplier = 4.5;
+            gsap.to(energyBorder, { opacity: 1, duration: 0.3 });
+            
+            // Volumetric vibration
+            gsap.to(frame, {
+                x: () => (Math.random() - 0.5) * 6,
+                y: () => (Math.random() - 0.5) * 6,
+                duration: 0.05,
+                repeat: 8,
+                yoyo: true,
+                clearProps: "x,y",
+                ease: "none"
+            });
+        }, null, 0);
+
+        // Time 0.3: Phase 2 starts (Dimensional Fracturing)
+        timeline.call(() => {
+            gsap.to(crackPaths, {
+                opacity: 0.9,
+                duration: 0.4,
+                stagger: {
+                    each: 0.04,
+                    from: "center"
+                },
+                ease: "sine.inOut"
+            });
+        }, null, 0.3);
+
+        // Time 0.7: Phase 3 & 4 start (Mirror Dimension Folding & Void)
+        timeline.call(() => {
+            const currentSlices = createSlices(currentData.image, slicesContainer, 8);
+            activeImgContainer.classList.remove('active');
+            voidGrid.classList.add('active');
+            
+            // Max volumetric fog/light rays
+            gsap.to('.volumetric-fog', {
+                background: 'radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.16) 0%, transparent 80%)',
+                duration: 0.4
+            });
+
+            // Fold current slices away
+            gsap.to(currentSlices, {
+                rotationY: (i) => i % 2 === 0 ? 50 + Math.random() * 20 : -50 - Math.random() * 20,
+                rotationX: () => (Math.random() - 0.5) * 25,
+                z: () => -350 - Math.random() * 200,
+                y: (i) => i % 2 === 0 ? 55 : -55,
+                x: (i) => (i - 3.5) * 20,
+                opacity: 0,
+                duration: 1.25,
+                stagger: {
+                    amount: 0.35,
+                    from: "center"
+                },
+                ease: "power2.inOut"
+            });
+
+            // Ghost Layer 1 (Medium depth)
+            const ghosts1 = createSlices(currentData.image, ghostsContainer, 8);
+            gsap.set(ghosts1, { opacity: 0.25, z: -250 });
+            gsap.to(ghosts1, {
+                rotationY: (i) => i % 2 === 0 ? 65 : -65,
+                z: -500,
+                opacity: 0,
+                duration: 1.1,
+                stagger: 0.025,
+                ease: "power2.inOut"
+            });
+
+            // Ghost Layer 2 (Deep depth)
+            const ghosts2 = createSlices(currentData.image, document.createElement('div'), 8);
+            ghostsContainer.appendChild(ghosts2[0].parentElement);
+            gsap.set(ghosts2, { opacity: 0.12, z: -500 });
+            gsap.to(ghosts2, {
+                rotationY: (i) => i % 2 === 0 ? 75 : -75,
+                z: -850,
+                opacity: 0,
+                duration: 1.2,
+                stagger: 0.025,
+                ease: "power2.inOut"
+            });
+        }, null, 0.7);
+
+        // Time 1.2: Phase 5 starts (Reality Reconstruction)
+        timeline.call(() => {
+            const nextSlices = createSlices(nextData.image, slicesContainer, 8);
+            gsap.set(nextSlices, {
+                rotationY: (i) => i % 2 === 0 ? -60 : 60,
+                rotationX: () => (Math.random() - 0.5) * 40,
+                z: -800,
+                y: (i) => i % 2 === 0 ? -85 : 85,
+                x: (i) => (i - 3.5) * 30,
+                opacity: 0
+            });
+
+            // Unfold into place
+            gsap.to(nextSlices, {
+                rotationY: 0,
+                rotationX: 0,
+                z: 0,
+                y: 0,
+                x: 0,
+                opacity: 1,
+                duration: 1.3,
+                stagger: {
+                    amount: 0.35,
+                    from: "center"
+                },
+                ease: "power3.inOut"
+            });
+        }, null, 1.2);
+
+        // Time 2.0: Phase 6 starts (Restore Reality)
+        timeline.call(() => {
+            gsap.to(crackPaths, {
+                opacity: 0,
+                duration: 0.5,
+                ease: "power2.out"
+            });
+            speedMultiplier = 1;
+            gsap.to('.volumetric-fog', {
+                background: 'radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 70%)',
+                duration: 0.85
+            });
+        }, null, 2.0);
+
+        // Keep timeline playing for 2.5s duration
+        timeline.to({}, { duration: 2.5 });
+    }
+
+    // Button event listeners
+    prevBtn.addEventListener('click', () => {
+        const prevIdx = (currentIdx - 1 + eventDatabase.length) % eventDatabase.length;
+        triggerMirrorTransition(prevIdx);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        const nextIdx = (currentIdx + 1) % eventDatabase.length;
+        triggerMirrorTransition(nextIdx);
+    });
+
+    // Keyboard support
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+            const nextIdx = (currentIdx + 1) % eventDatabase.length;
+            triggerMirrorTransition(nextIdx);
+        } else if (e.key === 'ArrowLeft') {
+            const prevIdx = (currentIdx - 1 + eventDatabase.length) % eventDatabase.length;
+            triggerMirrorTransition(prevIdx);
+        }
+    });
+
+    // Ambient frame glow on hover
+    frame.addEventListener('mouseenter', () => {
+        if (!isAnimating) {
+            gsap.to(ambientGlow, { opacity: 0.35, duration: 0.5 });
+        }
+    });
+    frame.addEventListener('mouseleave', () => {
+        if (!isAnimating) {
+            gsap.to(ambientGlow, { opacity: 0.15, duration: 0.5 });
+        }
+    });
+
+    // Toggle details card helper
+    function toggleDetails(open) {
+        isDetailsOpen = open;
+        if (isDetailsOpen) {
+            gsap.to(detailsCard, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                ease: "power3.out",
+                onStart: () => {
+                    detailsCard.style.pointerEvents = 'auto';
+                    detailsCard.style.visibility = 'visible';
+                }
+            });
+        } else {
+            gsap.to(detailsCard, {
+                opacity: 0,
+                y: 15,
+                duration: 0.4,
+                ease: "power2.inOut",
+                onComplete: () => {
+                    detailsCard.style.pointerEvents = 'none';
+                    detailsCard.style.visibility = 'hidden';
+                }
+            });
+        }
+    }
+
+    // Click image to toggle details card
+    const stage = document.querySelector('.mirror-stage');
+    if (stage && detailsCard) {
+        stage.addEventListener('click', () => {
+            if (isAnimating) return;
+            toggleDetails(!isDetailsOpen);
+        });
+
+        detailsCard.addEventListener('click', () => {
+            if (isAnimating) return;
+            toggleDetails(false); // Always close when clicked
+        });
+    }
 }

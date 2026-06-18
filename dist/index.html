@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astra-X | Upcoming Sagas & Events Portal</title>
+    <meta name="description" content="Explore the upcoming events of Astra-X, the flagship national-level college festival. Prepare to witness the multiverse of tech, robotics, design, and coding sagas.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <!-- Main Stylesheet -->
+  <script type="module" crossorigin src="/assets/index-_FWz3oL1.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-2E0n5W7u.css">
+</head>
+<body>
+    <!-- Background Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+    
+    <!-- Cosmic Glowing Backdrop Gradients -->
+    <div class="cosmic-bg">
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="/assets/bg-video-DOLQMola.mp4" type="video/mp4">
+        </video>
+        <div class="cosmic-overlay"></div>
+        <div class="nebula-red"></div>
+        <div class="nebula-blue"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">
+                <span class="logo-main">ASTRA</span><span class="logo-sub">-X</span>
+            </a>
+            <button class="nav-toggle" aria-label="toggle menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="#home" class="nav-link active">Home</a></li>
+                    <li><a href="#events" class="nav-link">Events</a></li>
+                    <li><a href="#about" class="nav-link">About Us</a></li>
+                    <li><a href="#workshop" class="nav-link">Workshop</a></li>
+                    <li><a href="#gallery" class="nav-link">Gallery</a></li>
+                    <li><a href="#sponsors" class="nav-link">Sponsors</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="hero-section">
+            <div class="hero-content">
+                <div class="hero-title-container">
+                    <img src="/assets/title%20card-D87nA2X0.png" alt="Astra-X: Hall of Legends" class="hero-title-img">
+                </div>
+                <p class="hero-subtitle">
+                    Step through the gateway. Prepare to enter the upcoming sagas of Astra-X and witness the high-tech battles, legendary challenges, and cosmic innovations that will define our new chapter.
+                </p>
+                <div class="hero-divider">
+                    <div class="line"></div>
+                    <div class="eye-of-agamotto" aria-label="Eye of Agamotto">
+                        <img src="/assets/eye%20of%20agamotto-l-EJ8WNu.png" alt="Eye of Agamotto" class="doctor-strange-eye">
+                    </div>
+                    <div class="line"></div>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <span class="mouse">
+                    <span class="wheel"></span>
+                </span>
+                <span class="scroll-text">Scroll Down</span>
+            </div>
+        </section>
+
+        <!-- Events Section (Mirror Dimension Showcase) -->
+        <section id="events" class="events-section">
+            <div class="section-header">
+                <h2 class="section-title">THE MIRROR DIMENSION</h2>
+                <p class="section-subtitle">Traverse the fractured realities of our upcoming national-level sagas.</p>
+            </div>
+
+            <!-- The Mirror Dimension Slider Showcase -->
+            <div class="mirror-slider-container">
+                <!-- Modern Cinematic Frame -->
+                <div class="mirror-frame">
+                    <!-- Glow and energy border layers -->
+                    <div class="frame-energy-border"></div>
+                    <div class="frame-ambient-glow"></div>
+                    
+                    <!-- Volumetric fog overlay -->
+                    <div class="volumetric-fog"></div>
+
+                    <!-- Canvas for volumetric particles -->
+                    <canvas id="mirror-particle-canvas"></canvas>
+
+                    <!-- SVG for dimensional cracks -->
+                    <svg class="crack-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+                        <!-- Diagonal cracks radiating from center -->
+                        <path class="crack-path" d="M500,500 L150,150" />
+                        <path class="crack-path" d="M500,500 L850,150" />
+                        <path class="crack-path" d="M500,500 L850,850" />
+                        <path class="crack-path" d="M500,500 L150,850" />
+                        
+                        <!-- Axis cracks -->
+                        <path class="crack-path" d="M500,500 L500,80" />
+                        <path class="crack-path" d="M500,500 L500,920" />
+                        <path class="crack-path" d="M500,500 L80,500" />
+                        <path class="crack-path" d="M500,500 L920,500" />
+                        
+                        <!-- Concentric geometric rune shapes -->
+                        <path class="crack-path" d="M500,280 L650,390 L500,500 L350,390 Z" />
+                        <path class="crack-path" d="M500,720 L650,610 L500,500 L350,610 Z" />
+                        <path class="crack-path" d="M500,180 L720,340 L500,500 L280,340 Z" />
+                        <path class="crack-path" d="M500,820 L720,660 L500,500 L280,660 Z" />
+                    </svg>
+
+                    <!-- Infinite Perspective Void -->
+                    <div class="mirror-void">
+                        <div class="void-grid-floor"></div>
+                        <div class="void-grid-ceiling"></div>
+                        <div class="void-portal-ring"></div>
+                    </div>
+
+                    <!-- Active Slider Stage -->
+                    <div class="mirror-stage">
+                        <!-- Slices container (populated by JS during transition) -->
+                        <div class="mirror-slices-container"></div>
+
+                        <!-- Static active image container -->
+                        <div class="mirror-active-image-container active">
+                            <img id="mirror-active-image" src="/assets/event-debate-pAjk3skr.png" alt="AI Technical Debate">
+                        </div>
+
+                        <!-- Ghost copies container -->
+                        <div class="mirror-ghosts-container"></div>
+
+                        <!-- Fixed Glowing Green Border Overlay -->
+                        <div class="stage-border-overlay"></div>
+                    </div>
+                    
+                    <!-- Navigation buttons -->
+                    <button class="mirror-nav-btn prev" aria-label="Previous Slide">
+                        <span class="arrow">&#x276E;</span>
+                    </button>
+                    <button class="mirror-nav-btn next" aria-label="Next Slide">
+                        <span class="arrow">&#x276F;</span>
+                    </button>
+
+                    <!-- Event Details Card (Overlaid inside frame) -->
+                    <div class="mirror-details-card">
+                        <div class="details-badge" id="details-badge">Tech Saga</div>
+                        <h3 class="details-title" id="details-title">AI Technical Debate</h3>
+                        <p class="details-description" id="details-description">An intense battle of minds pitching human logic against artificial intelligence algorithms. Competitors will debate hot-button issues in machine learning, neural ethics, and futuristic engineering.</p>
+                        <div class="details-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">REWARD</span>
+                                <strong class="meta-value" id="details-prize">₹40,000</strong>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">EXPECTED PARTICIPANTS</span>
+                                <strong class="meta-value" id="details-participants">200+</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline / Legacy Section -->
+        <section id="timeline" class="timeline-section">
+            <div class="section-header">
+                <h2 class="section-title">CHRONOLOGY OF POWER</h2>
+                <p class="section-subtitle">How Astra-X expanded its territory in the college event universe.</p>
+            </div>
+
+            <div class="timeline-container">
+                <div class="timeline-line">
+                    <div class="timeline-progress"></div>
+                </div>
+
+                <!-- Timeline Node 2025 -->
+                <div class="timeline-node" data-year="2025">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2025</span>
+                        <h3 class="timeline-heading">Multiverse Expansion</h3>
+                        <p class="timeline-body">
+                            Achieved a footprint of 600+ national participants. Expanded tech tracks into AI, Machine Learning, and Web3 integration, cementing Astra-X as a top regional tech conclave.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline Node 2024 -->
+                <div class="timeline-node" data-year="2024">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2024</span>
+                        <h3 class="timeline-heading">The Age of Iron</h3>
+                        <p class="timeline-body">
+                            Introduced bulletproof arena combat robots and speed drone piloting obstacles. Witnessed the heaviest bots colliding in a record-breaking spectacle.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline Node 2023 -->
+                <div class="timeline-node" data-year="2023">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2023</span>
+                        <h3 class="timeline-heading">Infinity Codex</h3>
+                        <p class="timeline-body">
+                            Initiated high-speed competitive programming and Cyber Security CTF battles. Developed custom capture-the-flag servers to challenge 500+ security enthusiasts.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline Node 2022 -->
+                <div class="timeline-node" data-year="2022">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2022</span>
+                        <h3 class="timeline-heading">Creative Dimension</h3>
+                        <p class="timeline-body">
+                            Pioneered UI/UX design masterclasses and dynamic 48-hour game jams, opening up Astra-X to digital designers and storytellers.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline Node 2021 -->
+                <div class="timeline-node" data-year="2021">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2021</span>
+                        <h3 class="timeline-heading">Quantum Genesis</h3>
+                        <p class="timeline-body">
+                            The spark that ignited the legacy. Conducted a fully virtual, cryptic puzzle-solving event that reached 800+ participants during challenging circumstances.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats / Upcoming Targets -->
+        <section id="achievements" class="achievements-section">
+            <div class="achievements-container">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="3000">0</div>
+                    <div class="stat-label">Expected Heroes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="500">0</div>
+                    <div class="stat-label">Projects to Deploy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="7">7</div>
+                    <div class="stat-label">Upcoming Sagas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="500000">0</div>
+                    <div class="stat-label">Prizes to Win (₹)</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+    <!-- Footer - MCU End Credits Roll Style -->
+    <footer class="credits-footer">
+        <div class="footer-glow"></div>
+        <div class="credits-container">
+            <div class="credits-header">
+                <h3 class="footer-title">ASTRA-X</h3>
+                <p class="footer-motto">THE LEGACY SHALL LIVE ON</p>
+            </div>
+            
+            <div class="credits-grid">
+                <div class="credits-column">
+                    <h4>PRODUCED BY</h4>
+                    <p>Department of Computer Science</p>
+                    <p>Student Development Council</p>
+                </div>
+                <div class="credits-column">
+                    <h4>CREATIVE DIRECTORS</h4>
+                    <p>Design & Web Operations Team</p>
+                    <p>Astra-X Publicity Guild</p>
+                </div>
+                <div class="credits-column">
+                    <h4>COSMIC LINKS</h4>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Instagram" class="social-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="LinkedIn" class="social-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="GitHub" class="social-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="credits-bottom">
+                <p class="copyright">&copy; 2026 Astra-X. All Rights Reserved. Assembled by Tech Division.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main Logic Script -->
+</body>
+</html>
