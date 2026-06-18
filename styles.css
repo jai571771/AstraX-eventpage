@@ -4,26 +4,26 @@
 
 /* --- Custom Variables & Palette --- */
 :root {
-    --bg-dark: #07080e;
-    --bg-card: rgba(18, 20, 32, 0.7);
+    --bg-dark: #040906;
+    --bg-card: rgba(12, 26, 18, 0.75);
     --text-light: #f3f4f6;
-    --text-muted: #9ca3af;
+    --text-muted: #a3b8aa;
     
-    /* Marvel Identity Colors */
-    --marvel-red: #f0131e;
-    --marvel-red-glow: rgba(240, 19, 30, 0.5);
-    --marvel-gold: #f5c400;
-    --marvel-gold-glow: rgba(245, 196, 0, 0.5);
+    /* Loki Theme Colors (Green & Gold) */
+    --marvel-red: #e6b800;
+    --marvel-red-glow: rgba(230, 184, 0, 0.5);
+    --marvel-gold: #00ff88;
+    --marvel-gold-glow: rgba(0, 255, 136, 0.5);
     
     /* Cosmic / Portal Glow Colors */
-    --portal-orange: #ff6a00;
-    --portal-orange-glow: rgba(255, 106, 0, 0.5);
-    --portal-cyan: #00d9ff;
-    --portal-cyan-glow: rgba(0, 217, 255, 0.5);
-    --portal-purple: #9d00ff;
-    --portal-purple-glow: rgba(157, 0, 255, 0.5);
+    --portal-orange: #00ff88;
+    --portal-orange-glow: rgba(0, 255, 136, 0.5);
+    --portal-cyan: #00ff88;
+    --portal-cyan-glow: rgba(0, 255, 136, 0.5);
+    --portal-purple: #e6b800;
+    --portal-purple-glow: rgba(230, 184, 0, 0.5);
 
-    --font-heading: 'Oswald', sans-serif;
+    --font-heading: 'Cinzel', serif;
     --font-body: 'Outfit', sans-serif;
     
     --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -93,6 +93,26 @@ a {
     background-repeat: no-repeat;
 }
 
+.bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.cosmic-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(7, 8, 14, 0.42); /* Reduced opacity for more background video visibility */
+    z-index: 1;
+}
+
 .nebula-red, .nebula-blue {
     position: absolute;
     border-radius: 50%;
@@ -100,6 +120,7 @@ a {
     opacity: 0.15;
     mix-blend-mode: screen;
     animation: orbit 40s linear infinite;
+    z-index: 2;
 }
 
 .nebula-red {
@@ -290,31 +311,33 @@ a {
     50% { transform: translateY(-10px); }
 }
 
-.hero-title {
-    font-family: var(--font-heading);
-    font-size: 5.5rem;
-    font-weight: 800;
-    letter-spacing: -2px;
-    line-height: 0.9;
-    text-transform: uppercase;
-    margin-bottom: 2rem;
+.hero-title-container {
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto 0.75rem;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    filter: drop-shadow(0 0 25px rgba(0, 255, 136, 0.45));
+    animation: floatTitle 4s ease-in-out infinite;
 }
 
-.title-word {
-    color: var(--text-light);
-    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.8), 0 0 10px rgba(255,255,255,0.1);
+.hero-title-img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
 }
 
-.title-glow {
-    background: linear-gradient(135deg, var(--marvel-red) 30%, var(--marvel-gold) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0px 0px 20px rgba(240, 19, 30, 0.4));
-    font-size: 6.5rem;
-    letter-spacing: 1px;
+@keyframes floatTitle {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        filter: drop-shadow(0 0 25px rgba(0, 255, 136, 0.45));
+    }
+    50% {
+        transform: translateY(-10px) scale(1.02);
+        filter: drop-shadow(0 0 35px rgba(0, 255, 136, 0.65));
+    }
 }
 
 .hero-subtitle {
@@ -335,32 +358,45 @@ a {
 .hero-divider .line {
     height: 1px;
     width: 120px;
-    background: linear-gradient(90deg, transparent, var(--marvel-red), transparent);
+    background: linear-gradient(90deg, transparent, #00ff88, transparent);
 }
 
-.reactor-core {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #fff 20%, var(--portal-cyan) 60%, transparent 100%);
-    box-shadow: 0 0 20px var(--portal-cyan), 0 0 35px var(--portal-cyan-glow);
+.eye-of-agamotto {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 15px rgba(0, 255, 136, 0.65));
+    animation: pulseEyeGlow 3.5s infinite alternate;
 }
 
-.reactor-core::after {
+.eye-of-agamotto::before {
     content: '';
     position: absolute;
-    top: -4px;
-    left: -4px;
-    right: -4px;
-    bottom: -4px;
-    border: 1.5px dashed var(--portal-cyan);
+    width: 50px;
+    height: 50px;
+    border: 1.2px dashed rgba(0, 255, 136, 0.4);
     border-radius: 50%;
-    animation: rotate 6s linear infinite;
+    animation: spinRuneClockwise 15s linear infinite;
+    z-index: -1;
 }
 
-@keyframes rotate {
-    to { transform: rotate(360deg); }
+.doctor-strange-eye {
+    width: 70px;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.45));
+    transition: filter 0.3s ease;
+}
+
+.doctor-strange-eye:hover {
+    filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.85));
+}
+
+@keyframes pulseEyeGlow {
+    0% { filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.45)); transform: scale(0.97); }
+    100% { filter: drop-shadow(0 0 22px rgba(0, 255, 136, 0.85)); transform: scale(1.03); }
 }
 
 .scroll-indicator {
@@ -614,11 +650,13 @@ section {
 }
 
 .portal-nav-btn.prev {
-    left: 0px;
+    left: calc(50% - 260px);
+    z-index: 50;
 }
 
 .portal-nav-btn.next {
-    right: 0px;
+    right: calc(50% - 260px);
+    z-index: 50;
 }
 
 .btn-arrow {
@@ -659,317 +697,432 @@ section {
     color: var(--portal-orange);
 }
 
-/* Runic Platform Base under portal */
-.runic-platform {
-    position: absolute;
-    bottom: -10px;
-    width: 480px;
-    height: 120px;
-    transform: rotateX(75deg);
-    pointer-events: none;
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.rune-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px dashed var(--portal-orange);
-    box-shadow: 0 0 15px var(--portal-orange-glow), inset 0 0 15px var(--portal-orange-glow);
-    opacity: 0.7;
-}
-
-.rune-ring.ring-1 {
-    width: 100%;
-    height: 100%;
-    border-style: double;
-    border-width: 3px;
-    animation: spinRuneClockwise 25s linear infinite;
-}
-
-.rune-ring.ring-2 {
-    width: 85%;
-    height: 85%;
-    border-width: 1px;
-    border-style: dotted;
-    animation: spinRuneCounter 18s linear infinite;
-}
-
-.rune-ring.ring-3 {
-    width: 65%;
-    height: 65%;
-    border-width: 1.5px;
-    border-style: dashed;
-    animation: spinRuneClockwise 12s linear infinite;
-}
-
-@keyframes spinRuneClockwise {
-    to { transform: rotate(360deg); }
-}
-
-@keyframes spinRuneCounter {
-    to { transform: rotate(-360deg); }
-}
-
-/* Portals Cards Wrapper */
-.portal-cards-wrapper {
+/* ==========================================================================
+   Mirror Dimension Slider Showcase Styles
+   ========================================================================== */
+.events-section {
+    padding: 8rem 2rem 4rem;
     position: relative;
-    width: 380px;
-    height: 380px;
+    z-index: 5;
+    background: linear-gradient(180deg, transparent, rgba(0, 255, 136, 0.02) 50%, transparent);
+}
+
+.mirror-slider-container {
+    max-width: 1200px;
+    margin: 3rem auto 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+}
+
+.mirror-frame {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    border-radius: 12px;
+    background: #050505;
+    /* Layered 3D drop shadows to make the frame appear floating above the canvas background */
+    box-shadow: 
+        0 5px 15px rgba(0, 0, 0, 0.6),
+        0 20px 45px rgba(0, 0, 0, 0.85),
+        0 45px 100px rgba(0, 0, 0, 0.95),
+        0 0 50px rgba(0, 255, 136, 0.08);
+    perspective: 1200px;
+    transform-style: preserve-3d;
     z-index: 10;
 }
 
-/* The Portal Card */
-.portal-card {
-    position: absolute;
-    width: 320px;
-    height: 320px;
-    border-radius: 50%;
-    transition: transform 0.8s cubic-bezier(0.25, 1, 0.3, 1), opacity 0.8s ease;
-    cursor: pointer;
-    transform-style: preserve-3d;
-}
-
-.portal-image-holder {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.portal-image-holder img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 1s cubic-bezier(0.25, 1, 0.3, 1);
-}
-
-/* Sparking Magic Portal Ring */
-.portal-ring {
-    position: absolute;
-    top: -8px;
-    left: -8px;
-    right: -8px;
-    bottom: -8px;
-    border-radius: 50%;
-    pointer-events: none;
-    box-shadow: 0 0 15px var(--portal-orange), 
-                0 0 30px var(--portal-orange-glow),
-                inset 0 0 15px var(--portal-orange),
-                inset 0 0 30px var(--portal-orange-glow);
-    border: 4px solid var(--portal-orange);
-    animation: rotateRing 6s linear infinite;
-    mix-blend-mode: screen;
-}
-
-.portal-sparkles {
+/* Glowing energy border (Phase 1) */
+.frame-energy-border {
     position: absolute;
     top: -4px;
     left: -4px;
     right: -4px;
     bottom: -4px;
-    border-radius: 50%;
-    border: 3px dotted var(--marvel-gold);
-    animation: rotateRingBack 3s linear infinite;
+    border: 2px solid #00ff88;
+    border-radius: 14px;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.5), inset 0 0 15px rgba(0, 255, 136, 0.5);
+    z-index: 20;
 }
 
-@keyframes rotateRing {
-    0% { transform: rotate(0deg) scale(1); }
-    50% { transform: rotate(180deg) scale(1.01); }
-    100% { transform: rotate(360deg) scale(1); }
-}
-
-@keyframes rotateRingBack {
-    0% { transform: rotate(360deg); }
-    100% { transform: rotate(0deg); }
-}
-
-/* Details overlaid inside/under the portal */
-.portal-text-overlay {
+/* Ambient glow (Phase 6) */
+.frame-ambient-glow {
     position: absolute;
-    bottom: -90px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 280px;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px;
+    opacity: 0.15;
     pointer-events: none;
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+    z-index: 2;
 }
 
-.portal-event-title {
-    font-family: var(--font-heading);
-    font-size: 1.7rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--text-light);
-    margin-bottom: 0.1rem;
-    text-transform: uppercase;
+/* Volumetric fog overlay */
+.volumetric-fog {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 8;
+    mix-blend-mode: screen;
 }
 
-.portal-event-subtitle {
-    font-size: 0.95rem;
-    color: var(--marvel-gold);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-bottom: 0.1rem;
-}
-
-.portal-event-date {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    font-weight: 400;
-}
-
-/* Slider States */
-
-/* Active Portal Card (Center, Full Scale, Glowing) */
-.portal-card.active {
-    opacity: 1;
+/* Particle Canvas */
+#mirror-particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: 15;
-    transform: translateX(0) scale(1.1) translateZ(30px);
-}
-
-.portal-card.active .portal-text-overlay {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-
-.portal-card.active .portal-image-holder {
-    border-color: var(--portal-orange);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-}
-
-.portal-card.active:hover .portal-image-holder img {
-    transform: scale(1.08);
-}
-
-/* Next Portal Card (Right, Small, Recessed) */
-.portal-card.next {
-    opacity: 0.45;
-    z-index: 10;
-    transform: translateX(230px) scale(0.65) rotateY(-35deg);
-}
-
-.portal-card.next .portal-ring {
-    border-color: var(--marvel-red);
-    box-shadow: 0 0 10px var(--marvel-red-glow), inset 0 0 10px var(--marvel-red-glow);
-}
-
-/* Previous Portal Card (Left, Small, Recessed) */
-.portal-card.prev {
-    opacity: 0.45;
-    z-index: 10;
-    transform: translateX(-230px) scale(0.65) rotateY(35deg);
-}
-
-.portal-card.prev .portal-ring {
-    border-color: var(--portal-cyan);
-    box-shadow: 0 0 10px var(--portal-cyan-glow), inset 0 0 10px var(--portal-cyan-glow);
-}
-
-/* Hidden Portal Cards */
-.portal-card.hidden {
-    opacity: 0;
-    z-index: 5;
-    transform: translateX(0) scale(0.3);
     pointer-events: none;
+    border-radius: 9px;
 }
 
-/* Bottom Explore Button Container */
-.portal-action-container {
-    text-align: center;
-    margin-top: 8rem;
+/* SVG cracks */
+.crack-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 18;
+    pointer-events: none;
+    border-radius: 9px;
 }
 
-.portal-action-btn {
-    background: rgba(7, 8, 14, 0.7);
-    border: 1px solid var(--portal-orange);
-    color: var(--text-light);
-    font-family: var(--font-heading);
-    font-size: 1.1rem;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    border-radius: 4px;
+.crack-path {
+    fill: none;
+    stroke: #00ff88;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 3px rgba(0, 255, 136, 0.7)) drop-shadow(0 0 8px rgba(0, 255, 136, 0.4));
+    opacity: 0;
+}
+
+/* Infinite Perspective Void */
+.mirror-void {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #020202;
+    opacity: 0;
+    z-index: 1;
+    overflow: hidden;
+    perspective: 500px;
+    transition: opacity 0.5s ease;
+    border-radius: 9px;
+}
+
+.void-grid-floor, .void-grid-ceiling {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    left: -50%;
+    background-image: 
+        linear-gradient(to right, rgba(0, 255, 136, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 255, 136, 0.08) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.6;
+}
+
+.void-grid-floor {
+    bottom: -150px;
+    transform: rotateX(80deg);
+}
+
+.void-grid-ceiling {
+    top: -150px;
+    transform: rotateX(-80deg);
+}
+
+.void-portal-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 350px;
+    height: 350px;
+    border: 2px dashed rgba(0, 255, 136, 0.25);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) translateZ(-400px);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.05);
+}
+
+/* Active Stage */
+.mirror-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    transform-style: preserve-3d;
+    border-radius: 9px;
     cursor: pointer;
-    padding: 0.8rem 2.2rem;
-    transition: var(--transition-smooth);
-    display: inline-flex;
+}
+
+/* Fixed Glowing Green Border Overlay */
+.stage-border-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 9px;
+    border: 3.5px solid rgba(0, 255, 136, 0.65); /* Glowing Green Border */
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.35), inset 0 0 15px rgba(0, 255, 136, 0.25);
+    pointer-events: none; /* Let clicks pass through to toggle details */
+    z-index: 10; /* Overlay on top of image and slices, below details card */
+}
+
+.mirror-active-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 9px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    transform-style: preserve-3d;
+}
+
+/* 3D Recessed Vignette Shadow Overlay */
+.mirror-active-image-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 9px;
+    pointer-events: none;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.95), inset 0 0 100px rgba(0, 0, 0, 0.9);
+    z-index: 2;
+}
+
+.mirror-active-image-container.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mirror-active-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Slices & Ghosts */
+.mirror-slices-container, .mirror-ghosts-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    pointer-events: none;
+    border-radius: 9px;
+}
+
+.mirror-slice {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background-repeat: no-repeat;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    border-left: 0.5px solid rgba(0, 255, 136, 0.35);
+    border-right: 0.5px solid rgba(0, 255, 136, 0.35);
+}
+
+/* Navigation Buttons */
+.mirror-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateZ(60px);
+    background: rgba(5, 5, 5, 0.8);
+    border: 1.5px solid rgba(0, 255, 136, 0.3);
+    color: #00ff88;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 0.8rem;
-    box-shadow: 0 0 15px rgba(255, 106, 0, 0.15);
-    backdrop-filter: blur(4px);
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+    outline: none;
 }
 
-.portal-action-btn:hover {
-    background: var(--portal-orange);
-    border-color: var(--portal-orange);
-    box-shadow: 0 0 25px var(--portal-orange-glow);
-    color: #000;
+.mirror-nav-btn.prev {
+    left: -80px;
+}
+
+.mirror-nav-btn.next {
+    right: -80px;
+}
+
+.mirror-nav-btn .arrow {
+    font-size: 1.3rem;
+    line-height: 1;
+    display: block;
+}
+
+.mirror-nav-btn:hover {
+    border-color: #00ff88;
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
+    background: #00ff88;
+    color: #050505;
+    transform: translateY(-50%) scale(1.15) translateZ(60px);
+}
+
+.mirror-details-card {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 92%;
+    height: fit-content;
+    max-height: 92%;
+    overflow-y: auto;
+    background: rgba(8, 16, 12, 0.94);
+    border: 1px solid rgba(0, 255, 136, 0.25);
+    border-radius: 12px;
+    padding: 2rem 1.8rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    text-align: center;
+    transform-style: preserve-3d;
+    transform: translateZ(100px); /* Push forward in 3D space */
+    z-index: 150;
+    cursor: pointer;
+}
+
+.details-badge {
+    display: inline-block;
+    background: rgba(0, 255, 136, 0.12);
+    color: #00ff88;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    padding: 0.35rem 1.1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 1.1rem;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+}
+
+.details-title {
+    font-family: var(--font-heading);
+    font-size: 2.1rem;
+    color: #fff;
+    margin-bottom: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.details-description {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.8rem;
+}
+
+.details-meta {
+    display: flex;
+    justify-content: center;
+    gap: 3.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 1.4rem;
+}
+
+.meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.meta-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.meta-value {
+    font-size: 1.25rem;
+    color: #00ff88;
     font-weight: 700;
-    transform: translateY(-3px);
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
 }
 
-/* --- Responsive styles for Portal Slider --- */
-@media (max-width: 1024px) {
-    .portal-slider-layout {
-        grid-template-columns: 100%;
-        text-align: center;
-        gap: 3rem;
+/* Responsive updates */
+@media (max-width: 768px) {
+    .mirror-frame {
+        width: 420px;
+        height: 420px;
     }
     
-    .portal-side-intro {
-        text-align: center;
-        padding-right: 0;
+    .mirror-nav-btn.prev {
+        left: -65px;
     }
     
-    .portal-side-info {
-        border-left: none;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        padding-left: 0;
-        padding-top: 2rem;
-        text-align: center;
+    .mirror-nav-btn.next {
+        right: -65px;
     }
 }
 
-@media (max-width: 520px) {
-    .portal-stage {
-        height: 380px;
-    }
-    .portal-cards-wrapper {
-        width: 260px;
-        height: 260px;
-    }
-    .portal-card {
-        width: 220px;
-        height: 220px;
-    }
-    .portal-card.next {
-        transform: translateX(110px) scale(0.45);
-    }
-    .portal-card.prev {
-        transform: translateX(-110px) scale(0.45);
-    }
-    .runic-platform {
+@media (max-width: 600px) {
+    .mirror-frame {
         width: 320px;
-        height: 80px;
+        height: 320px;
+        border: none;
     }
-    .portal-nav-btn.prev {
-        left: -10px;
+    
+    .mirror-nav-btn {
+        width: 44px;
+        height: 44px;
     }
-    .portal-nav-btn.next {
-        right: -10px;
+    
+    .mirror-nav-btn.prev {
+        left: 10px;
+    }
+    
+    .mirror-nav-btn.next {
+        right: 10px;
+    }
+    
+    .mirror-details-card {
+        padding: 1.5rem;
+    }
+    
+    .details-title {
+        font-size: 1.7rem;
     }
 }
+
 
 /* --- Timeline Section --- */
 .timeline-section {
@@ -989,7 +1142,7 @@ section {
     top: 0;
     bottom: 0;
     width: 4px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.15);
     transform: translateX(-50%);
     overflow: hidden;
 }
@@ -1008,26 +1161,59 @@ section {
 .timeline-node {
     position: relative;
     width: 50%;
-    padding: 2rem 3rem;
-    margin-bottom: 2rem;
-    opacity: 0;
-    transform: translateY(60px);
-    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.timeline-node.visible {
+    padding: 2rem 3.5rem;
+    margin-bottom: 2.5rem;
     opacity: 1;
-    transform: translateY(0);
+    transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .timeline-node:nth-child(even) {
     left: 0;
     text-align: right;
+    transform: translateX(-40px);
+    opacity: 0;
 }
 
 .timeline-node:nth-child(odd) {
     left: 50%;
     text-align: left;
+    transform: translateX(40px);
+    opacity: 0;
+}
+
+.timeline-node.visible,
+.timeline-node.active-marker {
+    opacity: 1;
+}
+
+.timeline-node:nth-child(even).visible,
+.timeline-node:nth-child(even).active-marker {
+    transform: translateX(0);
+}
+
+.timeline-node:nth-child(odd).visible,
+.timeline-node:nth-child(odd).active-marker {
+    transform: translateX(0);
+}
+
+.timeline-content {
+    background: rgba(6, 12, 8, 0.94);
+    border: 1.2px solid rgba(0, 255, 136, 0.12);
+    border-radius: 14px;
+    padding: 1.8rem 2.2rem;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+    transition: all 0.4s ease;
+    display: inline-block;
+    max-width: 100%;
+    text-align: inherit;
+}
+
+.timeline-node.active-marker .timeline-content,
+.timeline-node.visible .timeline-content {
+    border-color: rgba(0, 255, 136, 0.6);
+    background: rgba(6, 12, 8, 0.97);
+    box-shadow: 0 12px 40px rgba(0, 255, 136, 0.12), inset 0 0 15px rgba(0, 255, 136, 0.04);
 }
 
 .timeline-marker {
@@ -1067,10 +1253,11 @@ section {
     font-family: var(--font-heading);
     font-size: 2.2rem;
     font-weight: 700;
-    color: var(--marvel-gold);
+    color: rgba(0, 255, 136, 0.65);
     display: block;
     margin-bottom: 0.5rem;
-    text-shadow: 0 0 10px rgba(245, 196, 0, 0.2);
+    text-shadow: none;
+    transition: all 0.4s ease;
 }
 
 .timeline-heading {
@@ -1079,12 +1266,32 @@ section {
     font-weight: 600;
     text-transform: uppercase;
     margin-bottom: 0.8rem;
-    color: var(--text-light);
+    color: rgba(243, 244, 246, 0.7);
+    transition: all 0.4s ease;
 }
 
 .timeline-body {
-    color: var(--text-muted);
+    color: rgba(163, 184, 170, 0.7);
     font-size: 0.95rem;
+    transition: all 0.4s ease;
+}
+
+/* Active Text Highlights */
+.timeline-node.active-marker .timeline-year,
+.timeline-node.visible .timeline-year {
+    color: #00ff88;
+    text-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
+}
+
+.timeline-node.active-marker .timeline-heading,
+.timeline-node.visible .timeline-heading {
+    color: #ffffff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.35);
+}
+
+.timeline-node.active-marker .timeline-body,
+.timeline-node.visible .timeline-body {
+    color: #e2e8f0;
 }
 
 /* --- Achievements / Counter Section --- */
@@ -1469,11 +1676,8 @@ section {
    ========================================================================== */
 
 @media (max-width: 1024px) {
-    .hero-title {
-        font-size: 4.5rem;
-    }
-    .title-glow {
-        font-size: 5.5rem;
+    .hero-title-container {
+        max-width: 440px;
     }
     .modal-content {
         max-width: 750px;
@@ -1531,11 +1735,8 @@ section {
     }
 
     /* Hero Responsive */
-    .hero-title {
-        font-size: 3.5rem;
-    }
-    .title-glow {
-        font-size: 4.2rem;
+    .hero-title-container {
+        max-width: 340px;
     }
     .hero-subtitle {
         font-size: 1.1rem;
@@ -1575,11 +1776,8 @@ section {
 }
 
 @media (max-width: 480px) {
-    .hero-title {
-        font-size: 2.8rem;
-    }
-    .title-glow {
-        font-size: 3.4rem;
+    .hero-title-container {
+        max-width: 260px;
     }
     .section-title {
         font-size: 2.3rem;
@@ -1594,3 +1792,5 @@ section {
         padding: 1.5rem;
     }
 }
+
+
